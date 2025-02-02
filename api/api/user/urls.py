@@ -11,5 +11,6 @@ urlpatterns = [
     path('invoices/', views.get_customer_invoices),
     path('check-credentials/', views.check_credentials),
     path('settings/personal', views.settings_personal),
-    path('settings/password-forget', views.password_forget)
+    path('settings/password-forget', views.password_forget),
+    path('isadmin/', views.check_admin)
 ]

@@ -148,7 +148,7 @@ def check_credentials(req):
             user_id = data.get("user_id")
             user = get_object_or_404(User, id=user_id)
             #If user input in correct
-            if(check_credentials(password, user.password) and user.password_valid):
+            if(check_credentials(password, user.password) and user.password_valid==False):
                 return JsonResponse({
                     "login": True,
                     "message": "Redirecting to change password to a safe one"         
@@ -161,6 +161,26 @@ def check_credentials(req):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
     
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+#Checks if user is an admin
+def check_admin(req):
+    if req.method == 'POST':
+        try:
+            data = json.loads(req.body.decode("utf-8"))#parse json data
+            user_id = data.get("user_id")
+            user = get_object_or_404(User, id=user_id)
+            #If user input in correct
+            if(user.admin):
+                return JsonResponse({
+                    "admin": True,
+                    }, status=200)
+            else:
+                return JsonResponse({"admin":False}, status=403)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+    
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
 
 #updates personal settings
 def settings_personal(req):

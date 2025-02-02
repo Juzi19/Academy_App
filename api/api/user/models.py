@@ -36,13 +36,11 @@ class User(models.model):
     billing_country = models.CharField(default='', max_length=100)
 
     #There are relations from the products to the user
-    prev_viewed = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True)
+    prev_viewed = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
     #Products saved by the user
-    saved = models.ManyToManyField(Product, blank=True)
-    #Products viewed by the User
-    viewed = models.ManyToManyField(Product, blank=True)
-
-    stripe_subscription = models.OneToOneField(Subscription, on_delete=models.CASCADE, default=None, blank=True)  
+    saved = models.ManyToManyField(Product,on_delete=models.SET_NULL,null=True, blank=True)
+    
+    stripe_subscription = models.OneToOneField(Subscription, on_delete=models.SET_NULL,null=True, default=None, blank=True)  
     
     stripe_customer_id = models.CharField(max_length=50, unique=True)
     stripe_payment_method_id = models.CharField(max_length=50, blank=True, null=True)
