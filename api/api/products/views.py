@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 import json
 from django.http import JsonResponse
 from user.models import User
@@ -208,9 +208,6 @@ def search_name(req, search_name):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=405)
-
-    
-
 
 def user_subscribed(user)->bool:
     if(user.stripe_subscription.status == 'active' or user.admin):
