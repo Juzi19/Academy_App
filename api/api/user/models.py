@@ -24,9 +24,8 @@ class User(models.model):
     email_pin = models.IntegerField(blank=True)
     email_confirmed = models.BooleanField(default=False)
     password = models.CharField(max_length=128)
+    password_valid = models.BooleanField(default=True)
     #For password resets
-    password_restore = models.CharField(max_length=128, blank=True)
-    password_restore_valid = models.DateTimeField(blank=True)
     admin = models.BooleanField(default=False)
 
     #Billing adress information
