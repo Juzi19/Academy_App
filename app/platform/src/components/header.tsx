@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
 export default function Header(){
     return(
         <div className="z-50 bg-white fixed flex w-full h-[10vh] justify-center items-center">
@@ -8,7 +7,7 @@ export default function Header(){
                 <Link href='/' className="font-bold font-sans pl-1 hover:opacity-80">Academy App</Link>
             </div>
             <div className="flex w-1/2 items-center justify-end">
-                <Link href='/login' className="p-2 font-bold mr-1 hover:opacity-80">Login</Link>
+                <Link href='/login/check' className="p-2 font-bold mr-1 hover:opacity-80">Login</Link>
                 <Link href='/signup' className="p-2 text-white font-bold bg-black rounded-xl mr-1 hover:opacity-80">Registrieren</Link>
             </div>
         </div>

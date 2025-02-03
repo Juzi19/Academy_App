@@ -16,12 +16,12 @@ class Subscription(models.Model):
     current_period_end = models.DateTimeField()
 
 #User model
-class User(models.model):
+class User(models.Model):
     #Personal user information
     name = models.CharField(blank=False, max_length=100)
     email = models.EmailField(blank=False, unique=True)
     age = models.DateField(blank=False)
-    email_pin = models.IntegerField(blank=True)
+    email_pin = models.IntegerField(blank=True, null=True)
     email_confirmed = models.BooleanField(default=False)
     password = models.CharField(max_length=128)
     password_valid = models.BooleanField(default=True)
@@ -36,12 +36,12 @@ class User(models.model):
     billing_country = models.CharField(default='', max_length=100)
 
     #There are relations from the products to the user
-    prev_viewed = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
+    prev_viewed = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True, related_name='user_prev_viewed')
     #Products saved by the user
-    saved = models.ManyToManyField(Product,on_delete=models.SET_NULL,null=True, blank=True)
+    saved = models.ManyToManyField(Product, blank=True)
     
     stripe_subscription = models.OneToOneField(Subscription, on_delete=models.SET_NULL,null=True, default=None, blank=True)  
     
-    stripe_customer_id = models.CharField(max_length=50, unique=True)
+    stripe_customer_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
     stripe_payment_method_id = models.CharField(max_length=50, blank=True, null=True)
 

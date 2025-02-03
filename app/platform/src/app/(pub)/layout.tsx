@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import Head from "next/head";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
@@ -9,22 +7,25 @@ export const metadata: Metadata = {
   description: "Get acces to programming resources",
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
-      <Head>
-        <link rel="icon" href="/a-icon.png" type="image/png" />
-      </Head>
-      <body>
-        <div className="relative flex">
+    <div lang="de">
+      <div className="w-[100vw]">
+        <header>
+          <Header></Header>
+        </header>
+        <main className="relative flex">
           {children}
-        </div>
+        </main>
+        <footer>
+          <Footer></Footer>
+        </footer>
         
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }

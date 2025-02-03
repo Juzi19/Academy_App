@@ -140,21 +140,22 @@ def confirm_email(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 #Checks User login credentials
+@csrf_exempt
 def check_credentials(req):
     if req.method == 'POST':
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             password = data.get("password")
-            user_id = data.get("user_id")
-            user = get_object_or_404(User, id=user_id)
+            user_email = data.get("email")
+            user = get_object_or_404(User, email=user_email)
             #If user input in correct
-            if(check_credentials(password, user.password) and user.password_valid==False):
+            if(check_password(password, user.password) and user.password_valid==False):
                 return JsonResponse({
                     "login": True,
                     "message": "Redirecting to change password to a safe one"         
                     }, status=300)
             elif(check_password(password, user.password)):
-                return JsonResponse({"login":True}, status=200)
+                return JsonResponse({"login":True, "id":user.id, "admin": user.admin}, status=200)
             else:
                 return JsonResponse({"login":False}, status=403)
         except json.JSONDecodeError:
