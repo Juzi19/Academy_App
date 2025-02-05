@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "../../../../../lib/auth";
 import { signin } from "../../../../../lib/auth";
-import { isloggedIn } from "../../../../../lib/auth";
 import { host } from "../../../../../lib/auth";
 import { checkCsrfToken } from "../../../../../lib/auth";
 
@@ -11,7 +10,7 @@ export async function POST(req:NextRequest){
     const reqdata = await req.json();
     const {email, password, token} = reqdata;
     const requesturl:string = api+'/user/check-credentials/';
-    if(!checkCsrfToken){
+    if(!checkCsrfToken(token)){
         //if csrf Token isn't valid
         return NextResponse.error();
     }

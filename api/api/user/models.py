@@ -21,7 +21,7 @@ class User(models.Model):
     name = models.CharField(blank=False, max_length=100)
     email = models.EmailField(blank=False, unique=True)
     age = models.DateField(blank=False)
-    email_pin = models.IntegerField(blank=True, null=True)
+    email_pin = models.CharField(blank=True,max_length=128, null=True)
     email_confirmed = models.BooleanField(default=False)
     password = models.CharField(max_length=128)
     password_valid = models.BooleanField(default=True)

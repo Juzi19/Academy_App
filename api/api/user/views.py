@@ -15,6 +15,7 @@ import string
 stripe.api_key = "api_key"
 
 #start a subscribion and redirect to stripe
+@csrf_exempt
 def subscribe(req):
     if req.method == 'POST':
         try:
@@ -24,6 +25,8 @@ def subscribe(req):
             success_url = data.get("success_url")
             cancel_url = data.get("cancel_url")
             user = get_object_or_404(User, id=user_id)
+            if(user.email_confirmed==False):
+                return JsonResponse({"message": "Please confirm your email address"}, status=403)
             create_stripe_customer(user)
             url = create_subsciption(user, price_id, success_url, cancel_url)
             return JsonResponse({'url': url})
@@ -33,7 +36,7 @@ def subscribe(req):
     
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
-#View to update a users payment methods
+#View to update a user's payment methods
 def update_payment(req):
     if req.method == 'POST':
         try:
@@ -74,7 +77,10 @@ def get_customer_invoices(req):
     
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+
+
 #Creates a new user
+@csrf_exempt
 def create_user(req):
     if req.method == 'POST':
         try:
@@ -110,15 +116,16 @@ def create_user(req):
             #Sends account confirmation to the users email address
             send_conf_email(new_user)
 
-            return JsonResponse({"message":"User succesfully created"})
+            return JsonResponse({"message":"User succesfully created", "id":new_user.id}, status=200)
 
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
+            return JsonResponse({"error": "Invalid JSON"}, status=403)
     
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
-#Creates a new user
+#Confirms an email address
+@csrf_exempt
 def confirm_email(req):
     if req.method == 'POST':
         try:
@@ -131,7 +138,7 @@ def confirm_email(req):
                 #Confirms email address
                 user.email_confirmed = True
                 user.save()
-                return JsonResponse({"message":"Email confirmed"})
+                return JsonResponse({"message":"Email confirmed"}, status=200)
             else:
                 return JsonResponse({"message":"Incorrect pin"}, status=403)
         except json.JSONDecodeError:
@@ -260,13 +267,14 @@ def password_forget(req):
 #Sends a confirmation email to the user
 def send_conf_email(user):
     pin = random.randint(1000,9999)
+    pin = str(pin)
     user.email_pin = make_password(pin)
     user.save()
     send_mail(
         subject="Willkommen bei der Academy App",
         message=f'Wir freuen uns sehr über Ihre Anmeldung. Um fortzufahren geben Sie bitte folgende Pin ein: {pin}',
         from_email="noreply@example.com",
-        to=[user.email]
+        recipient_list=[user.email]
     )
 
 def generate_one_time_password(length=20):

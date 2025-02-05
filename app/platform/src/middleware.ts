@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decideSession, isloggedIn } from "../lib/auth";
 import { host } from "../lib/auth";
+import { logout } from "../lib/auth";
 
 export async function middleware(req: NextRequest){    
     //decides whether to start or proceed on an existing session
@@ -8,7 +9,7 @@ export async function middleware(req: NextRequest){
 
     const { pathname } = req.nextUrl;
     //auth middleware for protected parts of the page
-    if(pathname.startsWith('/profile')|| pathname.startsWith('/start')||pathname.startsWith('/products')){
+    if(pathname.startsWith('/profile')|| pathname.startsWith('/start')||pathname.startsWith('/products')||pathname.startsWith('/confirm-email')){
         //using authMiddleware ontop, to check if user is authenticated
         if(! await authMiddleware()){
             return NextResponse.redirect(host + '/login/')
@@ -50,5 +51,4 @@ export async function authMiddleware() {
 
 export const config = {
     runtime: 'nodejs',
-    matcher: ['/', '/login', '/start', '/profile', '/products']
-  };
+    matcher: ['/', '/(login|start|profile|products|confirm-email|signup)(.*)']  };

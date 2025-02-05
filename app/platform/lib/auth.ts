@@ -121,7 +121,7 @@ export async function getCsrfToken(): Promise<string | undefined> {
 }
 
 //signin function
-export async function signin(user_id:number, isadmin:boolean) {
+export async function signin(user_id:number, isadmin=false) {
     const user_cookies = await cookies();
     const session_id = user_cookies.get('session')?.value??null;
     if(session_id!=null){
@@ -157,6 +157,25 @@ export async function isloggedIn() {
             }
         }
     }
+}
+
+//User ID
+export async function getUserID():Promise<null | number> {
+    const user_cookies = await cookies();
+    const session_id = user_cookies.get('session')?.value??null;
+    if(session_id!=null){
+        const session_information: Session_Information | null = await redis.get(session_id);
+        if (!session_information){
+            console.log("Error connecting to redis");
+        }
+        else{
+            //checks if user is logged in
+            if(session_information.user_id!=null){
+                return session_information.user_id
+            }
+        }
+    }
+    return null
 }
 
 export async function logout() {

@@ -31,9 +31,11 @@ export default function Login(){
             })
             //Checks for success
             if (!res.ok) {
-                throw new Error('Failed to check credentials');
+                setMessage('Falsche E-Mail / Passwort')
             }
-            const data = await res.json(); // converts answer to json
+            else
+            {
+                const data = await res.json(); // converts answer to json
             const success = data.status;
             if(success){
                 console.log("Erfolgreich angemeldet")
@@ -42,6 +44,8 @@ export default function Login(){
             else{
                 setMessage('Falsche E-Mail / Passwort')
             }
+            }
+            
         }
         // Call sendData to actually send the request
         sendData();
