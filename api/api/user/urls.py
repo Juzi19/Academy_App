@@ -12,5 +12,6 @@ urlpatterns = [
     path('check-credentials/', views.check_credentials),
     path('settings/personal/', views.settings_personal),
     path('settings/password-forget/', views.password_forget),
-    path('isadmin/', views.check_admin)
+    path('isadmin/', views.check_admin),
+    path('stripe/webhook/', views.stripe_webhook)
 ]

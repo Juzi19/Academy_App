@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
+import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-x5rk=5=e2(fc6g0!t+ulvt$o5_jlfr%z@d$hcdf6s%qd7o3%cj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0308-2001-a61-35ec-6401-9dff-2f27-a866-44e.ngrok-free.app', 'localhost']
+CSRF_TRUSTED_ORIGINS = ['https://0308-2001-a61-35ec-6401-9dff-2f27-a866-44e.ngrok-free.app', 'http://localhost']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Frontend-URL
@@ -139,3 +140,12 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # In settings.py
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+#Stripe api key
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+# Stripe API Key aus der .env-Datei laden
+STRIPE_API_KEY = env("STRIPE_API_KEY")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET")

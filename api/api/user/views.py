@@ -4,15 +4,16 @@ from .models import User, Subscription
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import datetime
+from datetime import datetime
 import random
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password, check_password
 import secrets
 import string
+from django.conf import settings
+from django.utils import timezone
 
-
-stripe.api_key = "api_key"
+stripe.api_key = settings.STRIPE_API_KEY
 
 #start a subscribion and redirect to stripe
 @csrf_exempt
@@ -27,6 +28,9 @@ def subscribe(req):
             user = get_object_or_404(User, id=user_id)
             if(user.email_confirmed==False):
                 return JsonResponse({"message": "Please confirm your email address"}, status=403)
+            elif(user.stripe_subscription):
+                if(user.stripe_subscription.status == 'active' or user.stripe_subscription.status == 'Active'):
+                    return JsonResponse({"message": "User is already subscribed"}, status=403)
             create_stripe_customer(user)
             url = create_subsciption(user, price_id, success_url, cancel_url)
             return JsonResponse({'url': url})
@@ -294,6 +298,7 @@ def create_stripe_customer(user):
             "country": user.billing_country,
         }
     )
+    #Saves subscription information to the user
     user.stripe_customer_id = customer.id
     user.save()
     return customer.id
@@ -306,9 +311,7 @@ def create_subsciption(user, price_id, success_url, cancel_url):
         line_items=[{"price": price_id, "quantity": 1}],
         mode="subscription",
         success_url=success_url,
-        cancel_url=cancel_url,
-        #User gets emails automatically from stripe
-        customer_email=user.email
+        cancel_url=cancel_url
     )
     return session.url
 
@@ -317,7 +320,7 @@ def create_subsciption(user, price_id, success_url, cancel_url):
 def stripe_webhook(req):
     payload = req.body
     sig_header = req.headers.get("Stripe-Signature")
-    endpoint_secret = "webhook-secret"
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
@@ -325,17 +328,17 @@ def stripe_webhook(req):
         return JsonResponse({"error": str(e)}, status=400)
     
     subscription = event["data"]["object"]
-    subscription_costumer = subscription["costumer"]
+    subscription_customer = subscription["customer"]
     #Gets the subscripted user
-    user = User.objects.get(stripe_costumer_id=subscription_costumer)
+    user = User.objects.get(stripe_customer_id=subscription_customer)
     #Subscription updated
     if event["type"] == "customer.subscription.updated":
         #Getting and updating the subscription
         my_subscription = user.stripe_subscription
-        my_subscription.status = subscription["status"],
-        my_subscription.current_period_end = datetime.fromtimestamp(subscription["current_period_end"])
-        my_subscription.cancel_at_period_end = datetime.fromtimestamp(subscription["cancel_at_period_end"])
-        my_subscription.current_period_start = datetime.fromtimestamp(subscription["current_period_start"])
+        my_subscription.status = subscription["status"]
+        my_subscription.current_period_end = timezone.make_aware(datetime.fromtimestamp(subscription["current_period_end"]))
+        my_subscription.cancel_at_period_end = subscription["cancel_at_period_end"]
+        my_subscription.current_period_start = timezone.make_aware(datetime.fromtimestamp(subscription["current_period_start"]))
         my_subscription.save()
 
     #New Subscription
@@ -343,9 +346,10 @@ def stripe_webhook(req):
         new_subscription = Subscription.objects.create(
             stripe_subscription_id = subscription["id"],
             status = subscription["status"],
-            current_period_end = datetime.fromtimestamp(subscription["current_period_end"]),
-            cancel_at_period_end = datetime.fromtimestamp(subscription["cancel_at_period_end"]),
-            current_period_start = datetime.fromtimestamp(subscription["current_period_start"])
+            # native time to aware time
+            current_period_end = timezone.make_aware(datetime.fromtimestamp(subscription["current_period_end"])),
+            cancel_at_period_end = subscription["cancel_at_period_end"],
+            current_period_start = timezone.make_aware(datetime.fromtimestamp(subscription["current_period_start"]))
         )
         #Saves the subscription relation to the user
         user.stripe_subscription = new_subscription
@@ -358,9 +362,21 @@ def stripe_webhook(req):
     
     #Payment succeeded, getting data by invoice webhook with subscription destructuring
     elif event['type'] == 'invoice.payment_succeeded':
-        user.stripe_payment_method_id = subscription['payment_method']
-        user.save()
+        invoice = event["data"]["object"]
+        payment_intent_id = invoice.get('payment_intent')
 
+        if payment_intent_id:
+            payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+            payment_method_id = payment_intent.get('payment_method')
+
+            if payment_method_id:
+                user.stripe_payment_method_id = payment_method_id
+                user.save()
+            else:
+                print("Payment method not found in the payment intent")
+        else:
+            print("Payment intent not found in the invoice")
+    
     return JsonResponse({"status": "success"}, status=200)
 
 # Method to update a users payment

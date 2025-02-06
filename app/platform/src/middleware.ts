@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest){
 
     const { pathname } = req.nextUrl;
     //auth middleware for protected parts of the page
-    if(pathname.startsWith('/profile')|| pathname.startsWith('/start')||pathname.startsWith('/products')||pathname.startsWith('/confirm-email')){
+    if(pathname.startsWith('/profile')|| pathname.startsWith('/start')||pathname.startsWith('/products')||pathname.startsWith('/confirm-email')||pathname.startsWith('/subscribe')){
         //using authMiddleware ontop, to check if user is authenticated
         if(! await authMiddleware()){
             return NextResponse.redirect(host + '/login/')
@@ -51,4 +51,4 @@ export async function authMiddleware() {
 
 export const config = {
     runtime: 'nodejs',
-    matcher: ['/', '/(login|start|profile|products|confirm-email|signup)(.*)']  };
+    matcher: ['/', '/(login|start|profile|products|confirm-email|signup|subscribe|payment)(.*)']  };

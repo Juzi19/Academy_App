@@ -17,7 +17,6 @@ export async function POST(req:NextRequest) {
         billing_country,
         token
     } = data;
-    console.log(data)
     const url = api+'/user/new/';
     if(!checkCsrfToken(token)){
             //if csrf Token isn't valid

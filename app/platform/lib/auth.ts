@@ -1,7 +1,7 @@
 import redis from "./redis";
 import { cookies } from "next/headers";
 
-export const api = 'http://127.0.0.1:8000';
+export const api = 'https://0308-2001-a61-35ec-6401-9dff-2f27-a866-44e.ngrok-free.app';
 export const host = 'http://127.0.0.1:3000';
 
 interface Session_Information {

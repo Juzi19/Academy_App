@@ -75,27 +75,27 @@ export default function SignUp(){
                 <h1 className="mb-4 font-bold">Neues Profil erstellen:</h1>
                 <p className="text-red-500">{message}</p>
                 <label htmlFor="username">Benutzername:</label>
-                <input type="text" name="username" id="username" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="text" name="username" id="username" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="email">Email:</label>
-                <input type="email" name="email" id="email" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="email" name="email" id="email" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="birthday">Geburtstag</label>
-                <input type="date" name="birthday" id="birthday" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="date" name="birthday" id="birthday" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="password">Passwort:</label>
-                <input type="password" name="password" id="password" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="password" name="password" id="password" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="password-repeat">Passwort wiederholen:</label>
-                <input type="password" name="password-repeat" id="password-repeat" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="password" name="password-repeat" id="password-repeat" className="border-2 border-[#008390] my-1 px-1" required/>
                 <h2 className="my-1 font-bold">Rechnungsinformationen</h2>
                 <label htmlFor="billing_name">Name:</label>
-                <input type="text" name="billing_name" id="billing_name" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="text" name="billing_name" id="billing_name" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="billing_street_number">Straße und Hausnummer</label>
-                <input type="text" name="billing_street_number" id="billing_name_number" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="text" name="billing_street_number" id="billing_name_number" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="billing_city">Ort:</label>
-                <input type="text" name="billing_city" id="billing_city" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="text" name="billing_city" id="billing_city" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="billing_ZIP">Postleitzahl:</label>
-                <input type="text" name="billing_ZIP" id="billing_ZIP" className="border-2 border-[#008390] my-1 px-1"/>
+                <input type="text" name="billing_ZIP" id="billing_ZIP" className="border-2 border-[#008390] my-1 px-1" required/>
                 <label htmlFor="billing_country">Land:</label>
-                <input type="text" name="billing_country" id="billing_country" className="border-2 border-[#008390] my-1 px-1"/>
-                <input type="submit" value="Konto erstellen" className="my-1 mt-2 px-2 py-1 bg-[#008390] text-gray-100 font-bold rounded-xl hover:opacity-80"/>
+                <input type="text" name="billing_country" id="billing_country" className="border-2 border-[#008390] my-1 px-1" required/>
+                <input type="submit" value="Konto erstellen" className="my-1 mt-2 px-2 py-1 bg-[#008390] text-gray-100 font-bold rounded-xl hover:opacity-80" required/>
             </form>
         </div>
     )
