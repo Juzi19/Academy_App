@@ -3,7 +3,7 @@ export default function Start(){
     return(
         <div>
             <h1 className="w-full h-[100vh] flex items-center justify-center">Start</h1>
-            <Link href='/profile' className="p-2 font-bold mr-1 hover:opacity-80 h-full flex"><svg 
+            <Link href='/profile' className="p-2 font-bold mr-1 hover:opacity-80 flex"><svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     viewBox="0 0 24 24" 
                     width="60" 

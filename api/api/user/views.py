@@ -41,6 +41,7 @@ def subscribe(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 #View to update a user's payment methods
+@csrf_exempt
 def update_payment(req):
     if req.method == 'POST':
         try:
@@ -55,6 +56,7 @@ def update_payment(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 # Requesting a user's invoices
+@csrf_exempt
 def get_customer_invoices(req):
     if req.method == 'POST':
         try:
@@ -175,6 +177,7 @@ def check_credentials(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 #Checks if user is an admin
+@csrf_exempt
 def check_admin(req):
     if req.method == 'POST':
         try:
@@ -195,6 +198,7 @@ def check_admin(req):
 
 
 #updates personal settings
+@csrf_exempt
 def settings_personal(req):
     if req.method == 'GET':
         #Sending user information
@@ -237,7 +241,7 @@ def settings_personal(req):
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
-
+@csrf_exempt
 def password_forget(req):
     if req.method == 'POST':
     #Sending user information
@@ -400,3 +404,4 @@ def update_subscription_payment_method(user, payment_method_id):
             sub.id,
             default_payment_method=payment_method_id
         )
+

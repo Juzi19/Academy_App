@@ -3,6 +3,7 @@ import json
 from django.http import JsonResponse
 from user.models import User
 from .models import Product
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def new(req):
@@ -208,6 +209,33 @@ def search_name(req, search_name):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def start_information(req):
+    if req.method == 'GET':
+        try:
+            data = json.loads(req.body.decode("utf-8"))#parse json data
+            user_id = data.get("user_id")
+            user = get_object_or_404(User, id=user_id)
+            #Only subscibed users can create new products
+            if(user_subscribed(user)):
+                product = Product.objects.filter(name__icontains=search_name)
+                #response already including the previously viewed product
+                response = [[user.prev_viewed.name,user.prev_viewed.image.url, user.prev_viewed.description]]
+                for p in product:
+                    response.append([p.name,p.id, p.image.url, p.description])
+
+                return JsonResponse({
+                    "products":response
+                }, status=200)
+            
+            else:
+                return JsonResponse({'message': "Access denied, you're not subscribed"}, status=403)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
 
 def user_subscribed(user)->bool:
     if(user.stripe_subscription.status == 'active' or user.admin):
