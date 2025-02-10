@@ -17,15 +17,13 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('email_confirmed', 'admin')
     readonly_fields = ('stripe_customer_id', 'stripe_payment_method_id')
     
-    # Display related fields for prev_viewed products
     def prev_viewed_products(self, obj):
-        return ", ".join([str(product) for product in obj.prev_viewed.all()]) if obj.prev_viewed else "None"
-    prev_viewed_products.short_description = "Previously Viewed Products"
+        return str(obj.prev_viewed) if obj.prev_viewed else "None"
+    prev_viewed_products.short_description = "Previously Viewed Product"
 
-    # Display related fields for saved products
     def saved_products(self, obj):
-        return ", ".join([str(product) for product in obj.saved.all()]) if obj.saved else "None"
-    saved_products.short_description = "Saved Products"
+        return str(obj.saved) if obj.saved else "None"
+    saved_products.short_description = "Saved Product"
 
     # Override save_model to hash password before saving
     def save_model(self, request, obj, form, change):

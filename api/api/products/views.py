@@ -34,8 +34,9 @@ def new(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
+@csrf_exempt
 def product_id(req, id):
-    if req.method == 'GET':
+    if req.method == 'POST':
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
@@ -45,12 +46,15 @@ def product_id(req, id):
                 product = get_object_or_404(Product, id=id)
                 #User remeberes previously viewed product
                 user.prev_viewed = product
+                #Shows whether product is saved
+                saved = user.saved.contains(product)
                 user.save()
                 return JsonResponse({
                     "name":product.name,
-                    "desciption": product.description,
+                    "description": product.description,
                     "image_url": product.image.url,
-                    "file_url": product.file.url
+                    "file_url": product.file.url,
+                    "saved": saved
                 })
             else:
                 return JsonResponse({'message': "Access denied, you're not an admin"}, status=403)
@@ -95,9 +99,9 @@ def product_id(req, id):
             return JsonResponse({"error": "Invalid JSON"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
-
+@csrf_exempt
 def getall(req):
-    if req.method == 'GET':
+    if req.method == 'POST':
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
@@ -119,12 +123,14 @@ def getall(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
  
 
-
-def saved_product(req, id):
+@csrf_exempt
+def saved_product(req):
+    #Adding a product to the subscribed products
     if req.method == 'POST':
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
+            id = data.get("id")
             user = get_object_or_404(User, id=user_id)
             #Only subscibed users can create new products
             if(user_subscribed(user)):
@@ -145,6 +151,7 @@ def saved_product(req, id):
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
+            id = data.get("id")
             user = get_object_or_404(User, id=user_id)
             #Only subscibed users can create new products
             if(user_subscribed(user)):
@@ -163,8 +170,9 @@ def saved_product(req, id):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 #Returning all the saved products for a user
+@csrf_exempt
 def allsaved(req):
-    if req.method == 'GET':
+    if req.method == 'POST':
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
@@ -187,11 +195,13 @@ def allsaved(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 #A simple search to search for products
-def search_name(req, search_name):
-    if req.method == 'GET':
+@csrf_exempt
+def search_name(req):
+    if req.method == 'POST':
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
+            search_name = data.get("search_name")
             user = get_object_or_404(User, id=user_id)
             #Only subscibed users can create new products
             if(user_subscribed(user)):
@@ -212,21 +222,26 @@ def search_name(req, search_name):
 
 @csrf_exempt
 def start_information(req):
-    if req.method == 'GET':
+    if req.method == 'POST':
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
             user = get_object_or_404(User, id=user_id)
             #Only subscibed users can create new products
             if(user_subscribed(user)):
-                product = Product.objects.filter(name__icontains=search_name)
+                product = user.saved.all()
                 #response already including the previously viewed product
-                response = [[user.prev_viewed.name,user.prev_viewed.image.url, user.prev_viewed.description]]
+                response = []
+                if(user.prev_viewed):
+                    response = [[user.prev_viewed.name,user.prev_viewed.id,user.prev_viewed.image.url, user.prev_viewed.description]]
                 for p in product:
                     response.append([p.name,p.id, p.image.url, p.description])
 
                 return JsonResponse({
-                    "products":response
+                    "products":response,
+                    "username": user.name,
+                    "subscribed": user_subscribed(user),
+                    "email": user.email_confirmed
                 }, status=200)
             
             else:
@@ -238,6 +253,6 @@ def start_information(req):
 
 
 def user_subscribed(user)->bool:
-    if(user.stripe_subscription.status == 'active' or user.admin):
+    if(user.stripe_subscription.status == 'active' or user.stripe_subscription.status == 'Active' or user.admin):
         return True
     return False
