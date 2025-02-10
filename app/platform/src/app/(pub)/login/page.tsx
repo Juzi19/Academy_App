@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 export default function Login(){
     //using router to redirect client
     const [message, setMessage] = useState('')
@@ -36,14 +37,13 @@ export default function Login(){
             else
             {
                 const data = await res.json(); // converts answer to json
-            const success = data.status;
-            if(success){
-                console.log("Erfolgreich angemeldet")
-                router.push('/start')
-            }
-            else{
-                setMessage('Falsche E-Mail / Passwort')
-            }
+                const success = data.status;
+                if(success){
+                    router.push('/start')
+                }
+                else{
+                    setMessage('Falsche E-Mail / Passwort')
+                }
             }
             
         }
@@ -61,7 +61,9 @@ export default function Login(){
                 <label htmlFor="password" className="w-full text-left pl-2">Passwort:</label>
                 <input type="password" name="password" id="password" className="m-2 px-1 border-[#008390] border-2 min-w-[25vw]"/>
                 <input type="submit" value="Login" className="bg-[#008390] m-1 p-1 px-3 rounded-xl text-white hover:opacity-80"/>
+                <Link href='/forget-password/' className="text-sm font-bold mt-2 hover:opacity-80">Passwort vergessen?</Link>
             </form>
+            
         </div>
     )
 }

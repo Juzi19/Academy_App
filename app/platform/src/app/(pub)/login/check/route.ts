@@ -10,7 +10,7 @@ export async function POST(req:NextRequest){
     const reqdata = await req.json();
     const {email, password, token} = reqdata;
     const requesturl:string = api+'/user/check-credentials/';
-    if(!checkCsrfToken(token)){
+    if(!await checkCsrfToken(token)){
         //if csrf Token isn't valid
         return NextResponse.error();
     }
@@ -29,7 +29,7 @@ export async function POST(req:NextRequest){
             return NextResponse.json({status:false});
         }
         else if (!res.ok) {
-            throw new Error('Failed to check credentials');
+            return NextResponse.json({status:false}, {"status": res.status})
         }
 
         const data = await res.json(); // converts answer to json

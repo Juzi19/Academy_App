@@ -251,7 +251,7 @@ def start_information(req):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
-
+#User either has a stripe subsciption or is admin
 def user_subscribed(user)->bool:
     if(user.stripe_subscription.status == 'active' or user.stripe_subscription.status == 'Active' or user.admin):
         return True

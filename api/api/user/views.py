@@ -40,6 +40,32 @@ def subscribe(req):
     
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+#Cancel a subsciption
+@csrf_exempt
+def cancel_subscription(req):
+    if req.method == 'DELETE':
+        try:
+            data = json.loads(req.body.decode("utf-8"))
+            user_id = data.get("user_id")
+            user = get_object_or_404(User, id=user_id)
+            subscription_id = user.stripe_subscription.stripe_subscription_id
+
+            # Cancel subscription at period end
+            stripe.Subscription.modify(
+                subscription_id,
+                cancel_at_period_end=True
+            )
+            send_mail(
+                subject="Abonnement gekündigt",
+                message=f'Hiermit bestätigen wir den Eingang Ihrer Kündigung!',
+                from_email="noreply@example.com",
+                recipient_list=[user.email]
+            )
+            return JsonResponse({"message":"Subscription canceled"}, status=200)
+        except:
+            return JsonResponse({"error": "Error when handling updateing the payment / Invalid JSON"}, status=400)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
 #View to update a user's payment methods
 @csrf_exempt
 def update_payment(req):
@@ -200,7 +226,7 @@ def check_admin(req):
 #updates personal settings
 @csrf_exempt
 def settings_personal(req):
-    if req.method == 'GET':
+    if req.method == 'POST':
         #Sending user information
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
@@ -218,19 +244,26 @@ def settings_personal(req):
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
             name = data.get("name")
+            name = name.strip()
             password = data.get("password")
             previous_passwort = data.get("previous_password")
             user = get_object_or_404(User, id=user_id)
             #change password if user entered a new one
-            if(password != '' or password != None):
-                if(previous_passwort == '' or previous_passwort == None or check_password(previous_passwort, user.password) == False):
-                    return JsonResponse({"message": "please enter your current password to get a new one"})
+            if(password != None and previous_passwort!=None and password!='' and previous_passwort!=''):
+                if(check_password(previous_passwort, user.password) == False):
+                    return JsonResponse({"message": "please enter your current password to get a new one"}, status=400)
                 else:
                     #If User input the correct password
                     user.password = make_password(password)
                     user.password_valid = True
-            
-            if(name != '' or name != None):
+                    send_mail(
+                        subject="Passwort geändert",
+                        message=f'Sie haben Ihr Passwort für die Academy App erfolgreich geändert!',
+                        from_email="noreply@example.com",
+                        recipient_list=[user.email]
+                    )
+            #change name if user entered one
+            if(name != None and name!=''):
                 user.name = name
             
             #Saves changes to the user
@@ -248,18 +281,19 @@ def password_forget(req):
         try:
             data = json.loads(req.body.decode("utf-8"))#parse json data
             email = data.get("email")
-            user = User.objects.filter(User, email=email)
+            user = User.objects.filter(email=email)
             #Change password if user exists
-            if(user.exists()):
+            if(len(user) != 0):
+                user = user.first()
                 otp = generate_one_time_password()
                 user.password = make_password(otp)
                 send_mail(
                     subject="Passwort Wiederherstellung",
                     message=f'Sie erhalten hier Ihr Einmalpasswort um den Account wiederherstellen zu können:{otp}',
                     from_email="noreply@example.com",
-                    to=[user.email]
+                    recipient_list=[user.email]
                 )
-                user.password_valid = False
+                user.password_valid = True
                 #Saves changes to the user
                 user.save()
             return JsonResponse({}, status=200)
