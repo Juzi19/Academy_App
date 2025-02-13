@@ -6,32 +6,36 @@ from .models import Product
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
+@csrf_exempt
 def new(req):
-    if req.method == 'POST' and req.FILES.get("file") and req.FILES. get("image_description"):
-        try:
-            data = json.loads(req.body.decode("utf-8"))#parse json data
-            user_id = data.get("user_id")
-            user = get_object_or_404(User, id=user_id)
-            #Only admins can create new products
-            if(user.admin):
-                name = data.get("name")
-                description = data.get("description")
-                uploaded_file = req.FILES["file"]
-                image = req.FILES["image_description"]
-                #Creates a new Product
-                Product.objects.create(
-                    name=name,
-                    description=description,
-                    image=image,
-                    file=uploaded_file
-                )
-            else:
-                return JsonResponse({'message': "Access denied, you're not an admin"}, status=403)
-        
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
-    
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+    if req.method == 'POST':
+        if 'file' in req.FILES and 'img' in req.FILES:
+            try:
+                user_id = req.POST.get('user_id')
+                user = get_object_or_404(User, id=user_id)
+                #Only admins can create new products
+                if(user.admin):
+                    name = req.POST.get("name")
+                    description = req.POST.get("description")
+                    uploaded_file = req.FILES["file"]
+                    image = req.FILES["img"]
+                    #Creates a new Product
+                    Product.objects.create(
+                        name=name,
+                        description=description,
+                        image=image,
+                        file=uploaded_file
+                    )
+                    return JsonResponse({"message": "Product successfully created"}, status=200)
+                else:
+                    return JsonResponse({'message': "Access denied, you're not an admin"}, status=403)
+            
+            except json.JSONDecodeError:
+                return JsonResponse({"error": "Invalid JSON"}, status=400)
+        else:
+             return JsonResponse({"error": "Both 'file' and 'img' must be provided."}, status=400)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
 @csrf_exempt
@@ -89,10 +93,11 @@ def product_id(req, id):
             #Only subscibed users can create new products
             if(user.admin):
                 product = get_object_or_404(Product, id=id)
+                print("Produktid", id)
                 product.delete()
                 return JsonResponse({
                     "message": "Product deleted"
-                })
+                }, status=200)
             else:
                 return JsonResponse({'message': "Access denied, you're not an admin"}, status=403)
         except json.JSONDecodeError:
@@ -253,6 +258,6 @@ def start_information(req):
 
 #User either has a stripe subsciption or is admin
 def user_subscribed(user)->bool:
-    if(user.stripe_subscription.status == 'active' or user.stripe_subscription.status == 'Active' or user.admin):
+    if(user.admin or user.stripe_subscription.status == 'active' or user.stripe_subscription.status == 'Active'):
         return True
     return False

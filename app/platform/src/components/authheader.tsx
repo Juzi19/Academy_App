@@ -9,14 +9,14 @@ export default function Authheader(){
     function handleSubmit(e:any){
         e.preventDefault();
         const searchparams = e.target.elements.search.value;
-        router.push('search?searchname='+searchparams)
+        router.push('/products/search?searchname='+searchparams)
     }
 
     return(
         <div className="z-50 bg-white fixed flex w-full h-[10vh] justify-center items-center">
             <div className="flex h-full w-1/2 pl-1 justify-start items-center text-2xl">
-                <img src="/a-icon.png" alt="A Icon" className="h-[60%]"/>
-                <Link href='/start/' className="font-bold font-sans pl-1 hover:opacity-80">Academy App</Link>
+                <a href="/start" className="flex w-fit h-full items-center"><img src="/a-icon.png" alt="A Icon" className="h-[60%]"/></a>
+                <Link href='/start/' className="font-bold font-sans pl-1 hover:opacity-80 hidden ml-2 sm:contents ml-1">Academy App</Link>
             </div>
             <div className="flex flex-row h-full ">
                 <form action="POST" onSubmit={handleSubmit} className="flex h-full items-center justify-center">

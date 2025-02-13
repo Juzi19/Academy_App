@@ -18,7 +18,7 @@ export default async function AllProducts(){
     const {products} = await res.json();
 
     return(
-        <div className="w-full h-[90vh] mt-[10vh]">
+        <div className="w-full min-h-[90vh] mt-[10vh] flex items-center flex-col my-4">
             {/*Maping a product card for each product */}
             {products.map((product:[string, number, string, string])=>{
                 return(

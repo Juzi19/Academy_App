@@ -89,18 +89,21 @@ def get_customer_invoices(req):
             data = json.loads(req.body.decode("utf-8"))#parse json data
             user_id = data.get("user_id")
             user = get_object_or_404(User, id=user_id)
-            #Requesting invoices from stripe
-            invoices = stripe.Invoice.list(customer=user.stripe_customer_id, limit=10)
-            invoice_data = [
-                {
-                    "id": invoice.id,
-                    "amount_due": invoice.amount_due / 100,  # Price in €
-                    "status": invoice.status,  # "paid", "open", "void"
-                    "pdf_url": invoice.invoice_pdf,  # PDF-download-link
-                    "created": invoice.created,  # invoice's timestamp
-                }
-                for invoice in invoices.auto_paging_iter()
-            ]
+            if(user.stripe_customer_id==None):
+                invoice_data = []
+            else:
+                #Requesting invoices from stripe
+                invoices = stripe.Invoice.list(customer=user.stripe_customer_id, limit=24)
+                invoice_data = [
+                    {
+                        "id": invoice.id,
+                        "amount_due": invoice.amount_due / 100,  # Price in €
+                        "status": invoice.status,  # "paid", "open", "void"
+                        "pdf_url": invoice.invoice_pdf,  # PDF-download-link
+                        "created": invoice.created,  # invoice's timestamp
+                    }
+                    for invoice in invoices.auto_paging_iter()
+                ]
 
             return JsonResponse({"invoices": invoice_data})
 

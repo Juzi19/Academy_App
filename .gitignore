@@ -81,3 +81,8 @@ config.json
 # PyCharm & VSCode
 *.idea/
 *.vscode/
+
+*.db.sqlite3
+tmp/
+media/
+

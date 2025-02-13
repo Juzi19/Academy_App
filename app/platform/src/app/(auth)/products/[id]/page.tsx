@@ -1,7 +1,8 @@
-import { getUserID } from "../../../../../lib/auth"
+import { getUserID, isAdmin } from "../../../../../lib/auth"
 import { api } from "../../../../../lib/auth";
 import DownloadButton from "@/components/DownloadButton";
 import SaveButton from "@/components/SaveButton";
+import DeleteButton from "@/components/DeleteButton";
 export default async function SingleProduct({params}:{params:{id:string}}){
     const {id} = await params;
     const url = api + '/products/'+id+'/';
@@ -10,6 +11,7 @@ export default async function SingleProduct({params}:{params:{id:string}}){
         "method": "POST",
         "body": JSON.stringify({user_id:userid})
     })
+    const isadmin = await isAdmin();
     //return Error page, if necessary
     if(!res.ok){
         return(<div className="min-h-[90vh] w-full mt-[10vh]">
@@ -38,6 +40,9 @@ export default async function SingleProduct({params}:{params:{id:string}}){
                 </div>
             </div>
             <SaveButton def_state={saved} id={id} ></SaveButton>
+            <div className={`${isadmin?'contents':'hidden'}`}>
+            <DeleteButton id={id}></DeleteButton>
+            </div>
             
 
             

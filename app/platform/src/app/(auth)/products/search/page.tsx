@@ -25,14 +25,15 @@ export default async function SearchPage({searchParams}:{searchParams:{searchnam
             message = 'Keine Ergebnisse gefunden!'
         }
         return (
-            <div className="w-full mt-[10vh] min-h-[90vh] flex items-center flex-col">
+            <div className="w-full mt-[10vh] min-h-[90vh] flex flex-col items-center">
                 <h1 className="my-2 text-xl">Suchergebnisse für: <span className="font-bold">{searchname}</span></h1>
-                <div className="w-full flex justify-start">
-                    <p className="w-full text-center text-l text-gray-500"> {message}</p>
+                <p className="w-full text-center text-l text-gray-500"> {message}</p>
+                <div className="w-full">
                     {products.map((product:[string, number, string, string])=>{
                         return <ProductCard key={product[1]} name={product[0]} id={product[1]} image_url={product[2]} description={product[3]}/>
                     })}
                 </div>
+                
             </div>
         )
     }

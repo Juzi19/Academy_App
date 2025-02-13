@@ -132,7 +132,7 @@ export async function signin(user_id:number, isadmin=false) {
         else{
             //saving user id to the session id
             session_information.user_id = user_id;
-            session_information.isadmin = false;
+            session_information.isadmin = isadmin;
             redis.set(session_id, session_information);
         }
     }
@@ -172,6 +172,25 @@ export async function getUserID():Promise<null | number> {
             //checks if user is logged in
             if(session_information.user_id!=null){
                 return session_information.user_id
+            }
+        }
+    }
+    return null
+}
+
+//Returns if user is an admin
+export async function isAdmin() {
+    const user_cookies = await cookies();
+    const session_id = user_cookies.get('session')?.value??null;
+    if(session_id!=null){
+        const session_information: Session_Information | null = await redis.get(session_id);
+        if (!session_information){
+            console.error("Error connecting to redis");
+        }
+        else{
+            //checks if user is logged in
+            if(session_information.isadmin!=null){
+                return session_information.isadmin
             }
         }
     }
