@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import environ
 from dotenv import load_dotenv
+import dj_database_url
 
 # load env files
 load_dotenv()
@@ -28,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['0308-2001-a61-35ec-6401-9dff-2f27-a866-44e.ngrok-free.app', 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://0308-2001-a61-35ec-6401-9dff-2f27-a866-44e.ngrok-free.app', 'http://localhost', 'http://127.0.0.1']
@@ -86,10 +87,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 
 
@@ -137,8 +135,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #EMAIL settings
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# settings.py
 
+# E-Mail Backend (für Entwicklungszwecke)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# E-Mail-Server
+EMAIL_HOST = 'smtp.gmail.com'
+
+# E-Mail-Server Port (normalerweise 587 für TLS oder 465 für SSL)
+EMAIL_PORT = 587
+
+# E-Mail-Adresse und Passwort
+EMAIL_USE_TLS = True  # TLS (Transport Layer Security) aktivieren
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST') 
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')  # Dein E-Mail-Passwort oder App-Passwort (bei Gmail)
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+EMAIL_REPLY_TO = EMAIL_HOST_USER
 
 #Media settings
 # In settings.py

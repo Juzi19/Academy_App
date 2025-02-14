@@ -1,0 +1,40 @@
+# Node.js (Next.js) spezifische Dateien
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.next/
+out/
+
+# Django spezifische Dateien
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+db.sqlite3  # Falls du SQLite verwendest, ansonsten anpassen
+media/
+static/
+*.log
+
+# Environment und sensitive Dateien
+.env
+.env.*  # Falls du mehrere env-Dateien hast, z.B. .env.local
+secret_key.txt  # Beispiel, wenn du einen Datei für deinen Django Secret Key verwendest
+
+# Git-Dateien und Ordner
+.git/
+.gitignore
+
+# Build Artefakte
+build/
+dist/
+*.tar
+*.gz
+
+# Editor-spezifische Dateien
+.vscode/
+.idea/
+
+# OS-spezifische Dateien
+.DS_Store  # macOS
+Thumbs.db  # Windows
