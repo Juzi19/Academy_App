@@ -1,12 +1,10 @@
 "use client"
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
 export default function Subscribe(){
     const [token, setToken] = useState('')
     const [message, setMessage] = useState('')
-    const router = useRouter();
         
     useEffect(()=>{
         async function getToken() {

@@ -19,15 +19,32 @@ export default function AddProduct(){
         getToken();
     },[])
 
-    function handleSubmit(e:any){
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
+    
+        //Sending data type safe
+        const target = e.target as HTMLFormElement; 
+        if (!target) return;
         const formData = new FormData();
+        const nameInput = target.elements.namedItem("name") as HTMLInputElement;
+        const descriptionInput = target.elements.namedItem("description") as HTMLInputElement;
+        const imgInput = target.elements.namedItem("img") as HTMLInputElement;
+        const fileInput = target.elements.namedItem("file") as HTMLInputElement;
+        
         formData.append("token", token);
-        formData.append("name", e.target["name"].value);
-        formData.append("description", e.target["description"].value);
-        formData.append("img", e.target["img"].files[0]);
-        formData.append("file", e.target["file"].files[0]);
+
+        if (nameInput && descriptionInput) {
+            formData.append("name", nameInput.value);
+            formData.append("description", descriptionInput.value);
+        }
+    
+        if (imgInput?.files?.[0]) {
+            formData.append("img", imgInput.files[0]);
+        }
+    
+        if (fileInput?.files?.[0]) {
+            formData.append("file", fileInput.files[0]);
+        }
 
         async function sendData() {
             const res = await fetch('/products/admin/add', {

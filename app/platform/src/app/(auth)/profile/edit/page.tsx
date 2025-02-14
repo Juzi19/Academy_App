@@ -15,12 +15,13 @@ export default function EditProfile(){
         getToken();
     },[])
 
-    function handleSubmit(e:any){
+    function handleSubmit(e:React.FormEvent<HTMLFormElement>){
         e.preventDefault();
-        const username = e.target["username"].value;
-        const current_password = e.target["current_password"].value;
-        const new_password = e.target["new_password"].value;
-        const new_password2 = e.target["new_password2"].value;
+        const target = e.target as HTMLFormElement;
+        const username = (target["username"] as HTMLInputElement).value;
+        const current_password = (target["current_password"] as HTMLInputElement).value;
+        const new_password = (target["new_password"] as HTMLInputElement).value;
+        const new_password2 = (target["new_password2"] as HTMLInputElement).value;
         if(new_password!=new_password2){
             setMessage("Passwörter sind nicht gleich");
             return

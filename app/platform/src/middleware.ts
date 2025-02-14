@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decideSession, isloggedIn } from "../lib/auth";
 import { host } from "../lib/auth";
-import { logout } from "../lib/auth";
 
 export async function middleware(req: NextRequest){    
     //decides whether to start or proceed on an existing session

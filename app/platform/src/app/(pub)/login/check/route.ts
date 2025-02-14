@@ -51,7 +51,7 @@ export async function POST(req:NextRequest){
     }
 }
 //When logged in, return start page directly else login page
-export async function GET(req:NextRequest){
+export async function GET(){
     return NextResponse.redirect(host + '/start/');
 
 }

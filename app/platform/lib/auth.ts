@@ -25,7 +25,7 @@ export async function startSession(){
         csrf_token: await generateCsrfToken(),
         csrf_valid: generateCsrfValidity() 
     }
-    const user_cookies:any = await cookies()
+    const user_cookies = await cookies()
     const expires = new Date(session_information.session_valid);
 
     //set secure to true in production

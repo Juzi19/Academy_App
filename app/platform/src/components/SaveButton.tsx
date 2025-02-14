@@ -22,7 +22,7 @@ export default function SaveButton({ def_state, id }: { def_state: boolean, id: 
         getToken();
     },[])
 
-    function handleSubmit(e:any){
+    function handleSubmit(e:React.FormEvent<HTMLFormElement>){
         e.preventDefault();
         async function sendData() {
             const res = await fetch('/products/save/',{

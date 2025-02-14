@@ -3,7 +3,7 @@ import { api } from "../../../../../lib/auth";
 import DownloadButton from "@/components/DownloadButton";
 import SaveButton from "@/components/SaveButton";
 import DeleteButton from "@/components/DeleteButton";
-export default async function SingleProduct({params}:{params:{id:string}}){
+export default async function SingleProduct({params}:{params:Promise<{id:string}>}){
     const {id} = await params;
     const url = api + '/products/'+id+'/';
     const userid = await getUserID();
@@ -18,7 +18,9 @@ export default async function SingleProduct({params}:{params:{id:string}}){
             <p>Serverfehler</p>
         </div>)
     }
-    let {name, description, image_url, file_url, saved} = await res.json();
+    const data = await res.json();
+    const {name, description, saved} = data;
+    let {file_url, image_url}  =data;
     //specifying url paths
     file_url = api + file_url;
     image_url = api + image_url;

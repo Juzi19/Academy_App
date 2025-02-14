@@ -1,7 +1,7 @@
 import { api, getUserID, isAdmin } from "../../../../../../lib/auth";
 
-export default async function DeleteProduct({params}:{params:{id:string}}){
-    const {id} = await params;
+export default async function DeleteProduct({params}:{params:Promise<{id:string}>}){
+    const{id}=await params;
     const url = api+'/products/'+id.toString()+'/';
     if(await isAdmin()){
         const user = await getUserID();

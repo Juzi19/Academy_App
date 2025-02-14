@@ -1,6 +1,6 @@
 import ProductCard from "@/components/productcard";
 import { api, getUserID } from "../../../../../lib/auth";
-export default async function SearchPage({searchParams}:{searchParams:{searchname?: string}}) {
+export default async function SearchPage({searchParams}:{searchParams:Promise<{searchname:string}>}) {
     //getting the search parameter
     const params = await searchParams;
     const searchname = params.searchname;

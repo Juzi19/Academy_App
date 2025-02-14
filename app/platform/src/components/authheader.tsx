@@ -6,17 +6,30 @@ export default function Authheader(){
     const router = useRouter();
 
     //redirecting user to the proper get url
-    function handleSubmit(e:any){
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        const searchparams = e.target.elements.search.value;
-        router.push('/products/search?searchname='+searchparams)
+    
+        const searchInput = (e.target as HTMLFormElement).elements.namedItem("search") as HTMLInputElement;
+    
+        //continue if "search" isn't empty
+        if (searchInput) {
+            const searchParams = searchInput.value;
+    
+    
+            // Redirecting url
+            router.push('/products/search?searchname=' + encodeURIComponent(searchParams));
+        } else {
+            console.error("Search field is missing!");
+        }
     }
 
     return(
         <div className="z-50 bg-white fixed flex w-full h-[10vh] justify-center items-center">
             <div className="flex h-full w-1/2 pl-1 justify-start items-center text-2xl">
-                <a href="/start" className="flex w-fit h-full items-center"><img src="/a-icon.png" alt="A Icon" className="h-[60%]"/></a>
-                <Link href='/start/' className="font-bold font-sans pl-1 hover:opacity-80 hidden ml-2 sm:contents ml-1">Academy App</Link>
+            <Link href="/start/" className="flex w-fit h-full items-center">
+                <img src="/a-icon.png" alt="A Icon" className="h-[60%]" />
+            </Link>                
+            <Link href='/start/' className="font-bold font-sans pl-1 hover:opacity-80 hidden sm:contents ml-1">Academy App</Link>
             </div>
             <div className="flex flex-row h-full ">
                 <form action="POST" onSubmit={handleSubmit} className="flex h-full items-center justify-center">

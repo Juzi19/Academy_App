@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import { getUserID } from "../../../../../../lib/auth";
 import { api } from "../../../../../../lib/auth";
 import { host } from "../../../../../../lib/auth";
 
-export async function GET(req:NextRequest){
+export async function GET(){
     const user  = await getUserID();
     const res = await fetch(api+'/user/cancel-subscription/', {
         "method": "DELETE",

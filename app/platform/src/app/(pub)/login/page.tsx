@@ -18,10 +18,11 @@ export default function Login(){
         getToken();
     },[])
 
-    function handleSubmit(e:any){
+    function handleSubmit(e:React.FormEvent<HTMLFormElement>){
         e.preventDefault();
-        const email = e.target["email"].value;
-        const password = e.target["password"].value;
+        const target = e.target as HTMLFormElement;
+        const email = (target["email"] as HTMLInputElement).value;
+        const password = (target["password"] as HTMLInputElement).value;
         async function sendData() {
             const res = await fetch('login/check', {
                 method:'POST',

@@ -20,7 +20,7 @@ export default async function Start(){
     else{
         const data = await res.json();
         try{
-            let { products = [], username, email, subscribed } = data;
+            const { products = [], username, email, subscribed } = data;
 
             //if there's no information available
             if (!Array.isArray(products) || products.length === 0) {

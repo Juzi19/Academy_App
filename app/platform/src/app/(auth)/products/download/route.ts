@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from 'fs';
 import path from "path";
-import { error } from "console";
 
 const ensureDirExists = (dirPath: string) => {
     if (!fs.existsSync(dirPath)) {
@@ -17,9 +16,7 @@ export async function GET(req:NextRequest) {
         const response = await fetch(fileUrl);
         if(!response.ok) throw new Error("Error when loading the file");
         const buffer = await response.arrayBuffer();
-        console.log("File URL:", fileUrl)
         const fileName = path.basename(fileUrl);
-        console.log("Filename: ", fileName);
 
         const tempDir = path.join(process.cwd(), "temp");
         ensureDirExists(tempDir);
