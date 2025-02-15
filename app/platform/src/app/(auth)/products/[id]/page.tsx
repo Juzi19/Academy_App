@@ -21,8 +21,8 @@ export default async function SingleProduct({params}:{params:Promise<{id:string}
         </div>)
     }
     const data = await res.json();
-    const {name, description, saved} = data;
-    let {file_url, image_url}  =data;
+    const {name, description, saved, image_url} = data;
+    let {file_url}  =data;
     //specifying url paths
     file_url = file_url;
     
