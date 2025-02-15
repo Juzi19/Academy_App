@@ -23,10 +23,10 @@ RUN python manage.py migrate --noinput
 FROM node:20 AS frontend
 
 # Set working directory for frontend
-WORKDIR /app
+WORKDIR /app/platform
 
 # Copy frontend files
-COPY app/ /app/
+COPY app/platform /app/platform
 
 # Install dependencies and build
 RUN npm install
@@ -63,10 +63,10 @@ RUN pip install -r /api/requirements.txt
 
 # Copy frontend build
 WORKDIR /app
-COPY --from=frontend /app/.next /app/.next
-COPY --from=frontend /app/public /app/public
-COPY --from=frontend /app/package.json /app/package.json
-COPY --from=frontend /app/node_modules /app/node_modules
+COPY --from=frontend /app/platform/.next /app/platform/.next
+COPY --from=frontend /app/platform/public /app/platform/public
+COPY --from=frontend /app/platform/package.json /app/platform/package.json
+COPY --from=frontend /app/platform/node_modules /app/platform/node_modules
 
 # Expose ports for backend (8080) and frontend (3000)
 EXPOSE 8080 3000

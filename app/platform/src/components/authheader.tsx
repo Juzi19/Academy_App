@@ -1,9 +1,18 @@
 "use client"
 import Link from "next/link"
 import { useRouter } from "next/navigation";
+import { MouseEventHandler } from 'react';
 
 export default function Authheader(){
     const router = useRouter();
+
+
+    
+    //next js compiles components so that a regular links would log the user out every time
+    const handleLogout: MouseEventHandler<HTMLDivElement> = (event) => {
+        event.preventDefault(); 
+        router.push('/logout');
+    };
 
     //redirecting user to the proper get url
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -17,6 +26,7 @@ export default function Authheader(){
     
     
             // Redirecting url
+            router.refresh();
             router.push('/products/search?searchname=' + encodeURIComponent(searchParams));
         } else {
             console.error("Search field is missing!");
@@ -39,13 +49,13 @@ export default function Authheader(){
                 </form>
             </div>
             <div className="flex w-1/2 items-center justify-end">
-            <Link href='/logout' className="px-4 hover:opacity-80">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            </Link>
+            <div onClick={handleLogout} className="px-4 hover:opacity-80">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
             
 
             </div>

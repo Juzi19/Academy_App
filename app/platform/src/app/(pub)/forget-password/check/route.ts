@@ -25,7 +25,7 @@ export async function POST(req:NextRequest){
             return NextResponse.json({"Error": "Server error"},{"status": 500} );
         }
         else{
-            return NextResponse.redirect(new URL('start/', host))
+            return NextResponse.redirect(new URL('start/', host), {"status": 303})
         }
 
         

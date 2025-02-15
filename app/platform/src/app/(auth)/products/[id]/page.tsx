@@ -3,6 +3,8 @@ import { api } from "../../../../../lib/auth";
 import DownloadButton from "@/components/DownloadButton";
 import SaveButton from "@/components/SaveButton";
 import DeleteButton from "@/components/DeleteButton";
+import MediaImage from "@/components/MediaImage";
+
 export default async function SingleProduct({params}:{params:Promise<{id:string}>}){
     const {id} = await params;
     const url = api + '/products/'+id+'/';
@@ -22,16 +24,16 @@ export default async function SingleProduct({params}:{params:Promise<{id:string}
     const {name, description, saved} = data;
     let {file_url, image_url}  =data;
     //specifying url paths
-    file_url = api + file_url;
-    image_url = api + image_url;
+    file_url = file_url;
     
+
 
     return(
         <div className="w-full mt-[10vh] flex flex-col items-center justify-center p-2">
             <div className="flex items-center w-full min-h-[50vh]">
                 <h1 className="w-1/2 text-2xl font-bold">{name}</h1>
                 <div className="w-1/2 p-2">
-                    <img src={image_url} alt="Bild des Inhalts" />
+                    <MediaImage image_url={image_url}></MediaImage>
                 </div>
             </div>
             <hr className="h-1 bg-[#008390] p-[2px] w-full"/>

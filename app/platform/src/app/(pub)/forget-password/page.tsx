@@ -33,12 +33,12 @@ export default function ForgetPassword(){
                 },
                 body: JSON.stringify({ email: email, token:token }) // json data
             })
-            if(!res.ok){
-                setMessage('Fehler beim Senden der Email')
-            }
-            else{
+            if(res.ok){
                 setMessage('Wir haben ein Email verschickt!')
                 resetForm();
+            }
+            else{
+                setMessage('Fehler beim Senden der Email')
             }
             
         }

@@ -31,12 +31,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0308-2001-a61-35ec-6401-9dff-2f27-a866-44e.ngrok-free.app', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://0308-2001-a61-35ec-6401-9dff-2f27-a866-44e.ngrok-free.app', 'http://localhost', 'http://127.0.0.1']
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Frontend-URL
-]
+CORS_ALLOWED_ORIGINS = ['*']
 
 
 # Application definition
@@ -48,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'products',
     'user'
 ]
@@ -125,7 +124,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = f'https://{os.getenv("S3_BUCKET_NAME")}.r2.cloudflarestorage.com/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -155,10 +154,45 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 EMAIL_REPLY_TO = EMAIL_HOST_USER
 
-#Media settings
-# In settings.py
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+#Media files on cloudflare r2 settings
+AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('S3_NAME')
+AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT')
+
+#using r2 for media uploads
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            'access_key': os.getenv('S3_ACCESS_KEY'),
+            'secret_key': os.getenv('S3_SECRET_KEY'),
+            'bucket_name': os.getenv('S3_NAME'),
+            'endpoint_url': os.getenv('S3_ENDPOINT'),
+            'custom_domain': f"{os.getenv('S3_NAME')}.r2.cloudflarestorage.com",
+            'region_name': 'auto',  # Falls nötig, nach deinem Setup anpassen
+            'signature_version': 's3v4',
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            'access_key': os.getenv('S3_ACCESS_KEY'),
+            'secret_key': os.getenv('S3_SECRET_KEY'),
+            'bucket_name': os.getenv('S3_NAME'),
+            'endpoint_url': os.getenv('S3_ENDPOINT'),
+            'custom_domain': f"{os.getenv('S3_NAME')}.r2.cloudflarestorage.com",
+            'region_name': 'auto',
+        },
+    },
+}
+
+
+MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/' #to access files
 
 
 #Stripe api key

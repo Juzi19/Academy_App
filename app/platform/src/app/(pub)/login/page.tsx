@@ -40,6 +40,8 @@ export default function Login(){
                 const data = await res.json(); // converts answer to json
                 const success = data.status;
                 if(success){
+                    //Dirty fix for router problem in production
+                    router.refresh();
                     router.push('/start')
                 }
                 else{

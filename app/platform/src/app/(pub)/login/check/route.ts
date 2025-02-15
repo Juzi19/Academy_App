@@ -38,7 +38,7 @@ export async function POST(req:NextRequest){
         const isadmin = data.admin;
         if(success){
             //saves status to redis
-            signin(id, isadmin)
+            await signin(id, isadmin)
             //redirects to start
             return NextResponse.json({status: true})
         }
