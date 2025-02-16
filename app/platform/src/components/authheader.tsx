@@ -36,7 +36,7 @@ export default function Authheader(){
     return(
         <div className="z-50 bg-white fixed flex w-full h-[10vh] justify-center items-center">
             <div className="flex h-full w-1/2 pl-1 justify-start items-center text-2xl">
-            <Link href="/start/" className="flex w-fit h-full items-center">
+            <Link href="/start/" className="flex w-fit min-w-[6vh] h-full items-center">
                 <img src="/a-icon.png" alt="A Icon" className="h-[60%]" />
             </Link>                
             <Link href='/start/' className="font-bold font-sans pl-1 hover:opacity-80 hidden sm:contents ml-1">Academy App</Link>

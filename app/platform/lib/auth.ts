@@ -1,8 +1,8 @@
 import redis from "./redis";
 import { cookies } from "next/headers";
 
-export const api = 'http://127.0.0.1:8000';
-export const host = 'http://127.0.0.1:3000';
+export const api = 'https://academyapp-backend-production.up.railway.app';
+export const host = 'https://academyapp-frontend-production.up.railway.app';
 
 interface Session_Information {
     session_valid: number,
@@ -29,7 +29,7 @@ export async function startSession(){
     const expires = new Date(session_information.session_valid);
 
     //set secure to true in production
-    user_cookies.set('session', session_id, {expires,httpOnly:true, sameSite:'strict', secure: false})
+    user_cookies.set('session', session_id, {expires,httpOnly:true, sameSite:'strict', secure: true})
 
     await redis.set(session_id,session_information);
     await redis.expire(session_id, 2*60*60);

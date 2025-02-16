@@ -16,6 +16,8 @@ export default function Subscribe(){
         getToken();
     },[])
 
+    
+
     function handleSubmit(e:FormEvent<HTMLFormElement>){
         e.preventDefault();
         async function sendData() {
@@ -28,7 +30,7 @@ export default function Subscribe(){
             });
             const data = await res.json();
             if (res.ok){
-                window.open(data.url, '_blank')
+                setTimeout(function(){document.location.replace(data.url)},250);
             }
             else{
                 setMessage(data.message);

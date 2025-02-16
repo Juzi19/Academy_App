@@ -23,7 +23,9 @@ services:
       - app-network
 
   nginx:
-    image: nginx:alpine
+    build:
+      context: .  # root
+      dockerfile: ./nginx/Dockerfile  # dockerfile path
     ports:
       - "80:80"
     volumes:

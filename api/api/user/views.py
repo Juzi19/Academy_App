@@ -366,6 +366,8 @@ def stripe_webhook(req):
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
     except Exception as e:
+        print("Falsche Daten")
+        
         return JsonResponse({"error": str(e)}, status=400)
     
     subscription = event["data"]["object"]

@@ -37,7 +37,7 @@ export async function POST(req:NextRequest) {
         //redirecting and saving id to client
         if(res.status==200){
             //sign user in (redis)
-            signin(resdata.id);
+            await signin(resdata.id);
             //Redirecturl
             return new NextResponse(JSON.stringify({mes: true}),{
                 status:200

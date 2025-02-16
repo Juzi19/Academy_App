@@ -10,7 +10,7 @@ export default async function Start(){
         "body": JSON.stringify({"user_id": userid})
     })
     //If errors occur
-    if (!res.ok){
+    if (res.status == 400 || res.status == 405){
         return(
             <div className="w-full h-[100vh] pt-[10vh] justify-center items-center">
                 <h1>Fehler, evtl. sind Sie nicht subscribed!</h1>
