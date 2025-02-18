@@ -60,7 +60,7 @@ export default function SignUp(){
         if(password!=passwordRepeat){
             setMessage('Passwörter sind nicht gleich!')
         }
-        else if(password.lenth < 8){
+        else if(password.length < 8){
             setMessage('Passwort muss länger als 8 Zeichen sein')
         }
         else{

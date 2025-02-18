@@ -31,8 +31,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-"""
-ALLOWED_HOSTS = ['academyapp-backend-production.up.railway.app', 'cloudflare.com','academy-app.r2.cloudflarestorage.com', 'hooks.stripe.com', 'stripe.com', 'academyapp-backend-production.up.railway.app']
+
+ALLOWED_HOSTS = ['academyapp-backend-production.up.railway.app', 'cloudflare.com','academy-app.r2.cloudflarestorage.com', 'hooks.stripe.com', 'stripe.com', 'academyapp-frontend-production.up.railway.app']
 
 CSRF_TRUSTED_ORIGINS = ['https://academyapp-backend-production.up.railway.app']
 
@@ -51,7 +51,7 @@ CSRF_TRUSTED_ORIGINS = ['https://localhost:3000']
 CORS_ALLOWED_ORIGINS = [
     '*'      # stripe
 ]
-
+"""
 
 # Application definition
 

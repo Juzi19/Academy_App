@@ -18,12 +18,17 @@ export default async function Start(){
         )
     }
     else{
-        const data = await res.json();
         try{
-            const { products = [], username, email, subscribed } = data;
+            
+            const data = await res.json();                
+            
+
+            const { products = [], username, email, subscribed} = data;
+            
 
             //if there's no information available
             if (!Array.isArray(products) || products.length === 0) {
+                console.log("rückgabe")
                 return(
                     <div className="w-full flex h-[90vh] mt-[10vh] flex-col">
                         <div className="flex flex-row items-center">
@@ -42,7 +47,7 @@ export default async function Start(){
                             </Link>
                         </div>
                         <div className="flex flex-col  mt-[30vh] font-bold justify-center w-full items-center">
-                            <p className="mb-2">Starte deine Suche nach Produkten, um loszulegen!</p>
+                            <p className="mb-2 text-center">Starte deine Suche nach Produkten, um loszulegen!</p>
                             <Link href='/products/' className="bg-[#008390] px-4 py-2 text-gray-100 font-bold rounded-xl hover:opacity-80">Alle Produkte</Link>
                         </div>
                     </div>
@@ -56,7 +61,7 @@ export default async function Start(){
             if (products.length===0){
                 saved='';
             }
-            
+
         return(
             <div className="w-full flex min-h-[90vh] mb-8 mt-[10vh] flex-col">
                 <div className="flex flex-col w-full">
@@ -82,6 +87,8 @@ export default async function Start(){
                     </div>
                     <div>
                         <h2 className="px-2 font-bold">Zuletzt angesehen:</h2>
+                    </div>
+                    <div className="max-w-full min-w-full flex flex-col sm:flex-row items-center">
                         <ProductCard name={prev_viewed[0]} id={prev_viewed[1]} image_url={prev_viewed[2]} description={prev_viewed[3]}></ProductCard>
                     </div>
                     <div>
@@ -105,15 +112,18 @@ export default async function Start(){
             </div>
             )
         }
-        catch (error){
-            console.log(error)
+        catch (e){
+            if(e){
+                return(
+                    <div className="min-h-[90vh] mt-[10vh] flex items-center justify-center w-full p-2 flex-col">
+                        <Link href='confirm-email' className="bg-[#008390] min-w-[25%] max-w-fit px-4 py-2 text-gray-100 font-bold rounded-xl hover:opacity-80 text-center mb-1">Email bestätigen</Link>
+                        <Link href='subscribe' className="bg-[#008390] min-w-[25%] max-w-fit px-4 py-2 text-gray-100 font-bold rounded-xl hover:opacity-80 text-center mt-1">Abonnieren</Link>
+                    </div>
+                )
+            }
+            
         }
     
-        
-        
-        
-        
-        
     }
     
 }

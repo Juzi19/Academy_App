@@ -13,7 +13,7 @@ export default function ProductCard({ name, id, description, image_url }: Produc
     ? description.slice(0, description.lastIndexOf(" ", 30)) + "..." 
     : description;
     return(
-        <div className="flex sm:w-fit sm:max-w-[25%] p-2 min-w-[70%] max-w-full ">
+        <div className="flex sm:w-fit sm:max-w-[25%] p-2 max-w-[70%] ">
             <Link href={url} className="flex flex-col p-2 border-gray-400 border-2 rounded-xl justify-center items-center hover:opacity-80 text-center">
                 <div className="w-[80%]">
                     <MediaImage image_url={image_url}></MediaImage>

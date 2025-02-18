@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 export const api = 'https://academyapp-backend-production.up.railway.app';
 export const host = 'https://academyapp-frontend-production.up.railway.app';
+//export const host = 'http://localhost:3000';
 
 interface Session_Information {
     session_valid: number,

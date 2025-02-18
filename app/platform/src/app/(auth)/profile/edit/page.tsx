@@ -1,9 +1,19 @@
 "use client"
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { MouseEventHandler } from "react";
+
 export default function EditProfile(){
     const [token, setToken] = useState('');
     const [message, setMessage] = useState('');
+
+    const router = useRouter();
+    
+    //next js compiles components so that a regular links would log the user out every time
+    const handleLogout: MouseEventHandler<HTMLDivElement> = (event) => {
+        event.preventDefault(); 
+        router.push('/profile/edit/cancel-subscription/' );
+    };
         
     useEffect(()=>{
         async function getToken() {
@@ -72,7 +82,9 @@ export default function EditProfile(){
                 <input type="password" name="new_password2" id="new_password2" className="border-2 border-[#008390] my-1 px-1" />
                 <button type="submit" className="bg-[#008390] text-gray-100 font-bold rounded-xl px-4 py-2 my-1 hover:opacity-80">Senden!</button>
             </form>
-            <Link href='/profile/edit/cancel-subscription/' className="mt-8 bg-red-500 font-bold text-gray-100 px-4 py-2 rounded-xl hover:opacity-80">Abonnement kündigen</Link>
+            <div onClick={handleLogout}>
+                <p className="mt-8 bg-red-500 font-bold text-gray-100 px-4 py-2 rounded-xl hover:opacity-80">Abonnement kündigen</p>
+            </div>
         </div>
     )
 }

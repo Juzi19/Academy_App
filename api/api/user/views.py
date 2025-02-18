@@ -28,12 +28,22 @@ def subscribe(req):
             user = get_object_or_404(User, id=user_id)
             if(user.email_confirmed==False):
                 return JsonResponse({"message": "Please confirm your email address"}, status=403)
+            #User already has a subscription
             elif(user.stripe_subscription):
+                #User's subscription is active
                 if(user.stripe_subscription.status == 'active' or user.stripe_subscription.status == 'Active'):
-                    return JsonResponse({"message": "User is already subscribed"}, status=403)
-            create_stripe_customer(user)
-            url = create_subsciption(user, price_id, success_url, cancel_url)
-            return JsonResponse({'url': url})
+                    return JsonResponse({"url": 'academyapp-frontend-production.up.railway.app/start'})
+                #Creates a new checkout session if user's subscription is invalid 
+                elif(user.stripe_subscription == 'canceled' or user.stripe_subscription == 'incomplete'):
+                    url = create_subsciption(user, price_id, success_url, cancel_url)
+                    return JsonResponse({'url': url})
+                
+            elif(user.stripe_customer_id==None):
+                create_stripe_customer(user)
+                url = create_subsciption(user, price_id, success_url, cancel_url)
+                return JsonResponse({'url': url})
+            
+               
         
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
@@ -49,6 +59,10 @@ def cancel_subscription(req):
             user_id = data.get("user_id")
             user = get_object_or_404(User, id=user_id)
             subscription_id = user.stripe_subscription.stripe_subscription_id
+
+            #Denies access if user has no subscription or already cancelled it
+            if(user.stripe_subscription == None or user.stripe_subscription=='canceled' or user.stripe_subscription.cancel_at_period_end==True):
+                return JsonResponse({"message":"Subscription canceled"}, status=200)
 
             # Cancel subscription at period end
             stripe.Subscription.modify(
@@ -366,8 +380,7 @@ def stripe_webhook(req):
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
     except Exception as e:
-        print("Falsche Daten")
-        
+        print(e)
         return JsonResponse({"error": str(e)}, status=400)
     
     subscription = event["data"]["object"]
