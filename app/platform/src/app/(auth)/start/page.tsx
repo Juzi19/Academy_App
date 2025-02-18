@@ -85,13 +85,13 @@ export default async function Start(){
                         {!email?<div><Link href='confirm-email'>Email bestätigen</Link></div>:''}
                         {!subscribed?<div><Link href='subscribe'>Abonnieren</Link></div>:''}
                     </div>
-                    <div>
+                    <div className="sm:text-start text-center w-full">
                         <h2 className="px-2 font-bold">Zuletzt angesehen:</h2>
                     </div>
                     <div className="max-w-full min-w-full flex flex-col sm:flex-row items-center">
                         <ProductCard name={prev_viewed[0]} id={prev_viewed[1]} image_url={prev_viewed[2]} description={prev_viewed[3]}></ProductCard>
                     </div>
-                    <div>
+                    <div className="sm:text-start text-center w-full">
                         <h2 className="px-2 font-bold">{saved}</h2>
                     </div>
                     <div className="max-w-full min-w-full flex flex-col sm:flex-row items-center">
