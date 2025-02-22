@@ -1,9 +1,8 @@
 import redis from "./redis";
 import { cookies } from "next/headers";
 
-export const api = 'https://academyapp-backend-production.up.railway.app';
-export const host = 'https://academyapp-frontend-production.up.railway.app';
-//export const host = 'http://localhost:3000';
+export const api = process.env.BACKEND;
+export const host = process.env.FRONTEND;
 
 interface Session_Information {
     session_valid: number,
