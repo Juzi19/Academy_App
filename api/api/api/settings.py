@@ -36,12 +36,7 @@ ALLOWED_HOSTS = ['academyapp-backend-production.up.railway.app', 'cloudflare.com
 
 CSRF_TRUSTED_ORIGINS = ['https://academyapp-backend-production.up.railway.app']
 
-CORS_ALLOWED_ORIGINS = [
-    "https://academyapp-frontend-production.up.railway.app",  # frontend
-    "https://*.cloudflare.com",  # cloudflare
-    "https://*.stripe.com",      # stripe
-    'https://academy-app.r2.cloudflarestorage.com'
-]
+CORS_ALLOWED_ORIGINS = []
 
 
 """
