@@ -1,6 +1,6 @@
 export default function PP(){
     return(
-        <div>
+        <div className="mt-20">
             <h1>Datenschutzerklärung für AcademyApp</h1>
 
 <p><strong>Verantwortlicher:</strong><br />

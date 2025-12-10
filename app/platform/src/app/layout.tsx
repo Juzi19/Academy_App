@@ -21,13 +21,7 @@ export default function RootLayout({
       <body>
         <div className="relative flex">
           {children}
-        </div>
-        <div>
-          <a href="www.justus-dev.de/imprint">Imprint</a>
-          <a href="/privacy-policy">Datenschutzerklärung</a>
-
-        </div>
-        
+        </div>        
       </body>
     </html>
   );
